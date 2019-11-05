@@ -16,7 +16,10 @@ import com.donggeon.honmaker.extension.mlkit.VisionImageGetter;
 import com.donggeon.honmaker.ui.BaseActivity;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
+
+import java.util.Arrays;
 
 public class ImageActivity extends BaseActivity<ActivityImageBinding> {
     private static final String EXTRA_FILE_PATH = "EXTRA_FILE_PATH";
@@ -58,8 +61,11 @@ public class ImageActivity extends BaseActivity<ActivityImageBinding> {
     private void analyze(@NonNull final FirebaseVisionImage image) {
         Log.d("VisionImage", "analyze with image : " + image.toString());
 
+        FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
+                .setLanguageHints(Arrays.asList("en", "ko")).build();
+
         FirebaseVision.getInstance()
-                .getCloudTextRecognizer()
+                .getCloudTextRecognizer(options)
                 .processImage(image)
                 .addOnSuccessListener(result -> {
                     Log.d("VisionImage", "text: " + result.getText());
