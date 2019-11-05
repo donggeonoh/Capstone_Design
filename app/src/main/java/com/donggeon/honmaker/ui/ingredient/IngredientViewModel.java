@@ -1,7 +1,6 @@
 package com.donggeon.honmaker.ui.ingredient;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -17,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 @SuppressLint("CheckResult")
 public class IngredientViewModel extends BaseViewModel {
@@ -27,13 +26,26 @@ public class IngredientViewModel extends BaseViewModel {
     public final MutableLiveData<String> filePath = new MutableLiveData<>();
     public final MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>(new ArrayList<>());
 
-    private static final List<Ingredient> INGREDIENT_DATA =
-            new ArrayList<>(Arrays.asList(
-                    Ingredient.HAM,
-                    Ingredient.CHEEZE,
-                    Ingredient.TUNA));
+    private PublishSubject<List<Ingredient>> resultList = PublishSubject.create();
 
-    public void analyze() {
+    public IngredientViewModel() {
+        resultList.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(list -> {
+                    this.isLoading.setValue(false);
+                    this.ingredientList.setValue(list);
+                }, error -> {
+                    this.isLoading.setValue(false);
+                    error.printStackTrace();
+                });
+    }
+
+    void init(String filePath) {
+        this.filePath.setValue(filePath);
+        startAnalyze();
+    }
+
+    public void startAnalyze() {
         String filePath = this.filePath.getValue();
         if (filePath == null) {
             return;
@@ -47,40 +59,25 @@ public class IngredientViewModel extends BaseViewModel {
                         .setLanguageHints(Arrays.asList("en", "ko")).build();
 
         this.isLoading.setValue(true);
-        Observable.create(
-                emitter -> {
-                    FirebaseVision.getInstance()
-                            .getCloudTextRecognizer(options)
-                            .processImage(image)
-                            .addOnSuccessListener(result -> {
-                                for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
-                                    for (Ingredient item : INGREDIENT_DATA) {
-                                        if (textBlock.getText().contains(item.getName())) {
-                                            Log.d("ImageVision", "item : " + item.getName());
-                                            emitter.onNext(item);
-                                        }
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(error -> {
-                                emitter.onError(error);
-                                error.printStackTrace();
-                            });
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(item -> {
-                    this.isLoading.setValue(false);
-                    List<Ingredient> list = ingredientList.getValue();
-                    if (list == null) {
-                        list = new ArrayList<>();
+        FirebaseVision.getInstance()
+                .getCloudTextRecognizer(options)
+                .processImage(image)
+                .addOnSuccessListener(result -> {
+                    List<Ingredient> list = new ArrayList<>();
+                    for (Ingredient item : Ingredient.values()) {
+                        for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
+                            if (textBlock.getText().contains(item.getName())) {
+                                list.add(item);
+                                break;
+                            }
+                        }
                     }
-                    list.add((Ingredient) item);
-                    this.ingredientList.setValue(ingredientList.getValue());
-                }, Throwable::printStackTrace);
+                    resultList.onNext(list);
+                })
+                .addOnFailureListener(error -> {
+                    resultList.onError(error);
+                    error.printStackTrace();
+                });
     }
 
-    public void init(String filePath) {
-        this.filePath.setValue(filePath);
-    }
 }
