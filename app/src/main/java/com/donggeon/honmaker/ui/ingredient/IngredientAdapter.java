@@ -7,8 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.monk.focusonme.R;
-
+import com.donggeon.honmaker.R;
 public class IngredientAdapter extends ListAdapter<Ingredient, IngredientItemViewHolder> {
 
     public IngredientAdapter() {
@@ -24,7 +23,7 @@ public class IngredientAdapter extends ListAdapter<Ingredient, IngredientItemVie
 
     @Override
     public void onBindViewHolder(@NonNull IngredientItemViewHolder holder, int position) {
-        final Notice item = getItem(holder.getAdapterPosition());
+        final Ingredient item = getItem(holder.getAdapterPosition());
         holder.bindTo(item);
     }
 

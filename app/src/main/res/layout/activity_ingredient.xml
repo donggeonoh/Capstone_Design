@@ -19,7 +19,6 @@
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:file="@{activity.filePath}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +27,6 @@
             android:id="@+id/rv_ingredient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:items="@{activity.ingredientList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="@{LinearLayoutManager.HORIZONTAL}"
             app:layout_constraintBottom_toBottomOf="parent"
