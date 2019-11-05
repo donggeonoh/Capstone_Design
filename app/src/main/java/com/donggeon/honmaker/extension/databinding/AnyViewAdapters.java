@@ -1,10 +1,10 @@
 package com.donggeon.honmaker.extension.databinding;
 
-import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
+import androidx.databinding.BindingConversion;
 
 public class AnyViewAdapters {
 
@@ -13,4 +13,10 @@ public class AnyViewAdapters {
                                     final boolean activate) {
         view.setActivated(activate);
     }
+
+    @BindingConversion
+    public static int setLayoutOrientation(final boolean isVisible) {
+        return isVisible ? View.VISIBLE : View.GONE;
+    }
+
 }

@@ -7,8 +7,8 @@
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <variable
-            name="activity"
-            type="com.donggeon.honmaker.ui.ingredient.IngredientActivity" />
+            name="vm"
+            type="com.donggeon.honmaker.ui.ingredient.IngredientViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +19,8 @@
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:file="@{vm.filePath}"
+            android:onClick="@{__ -> vm.analyze()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -27,8 +29,10 @@
             android:id="@+id/rv_ingredient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="@{LinearLayoutManager.HORIZONTAL}"
+            android:overScrollMode="never"
+            app:items="@{vm.ingredientList}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -36,10 +40,11 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{activity.isLoading}"
+            android:visibility="@{vm.isLoading}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

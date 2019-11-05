@@ -1,5 +1,7 @@
 package com.donggeon.honmaker.extension.databinding;
 
+import android.util.Log;
+
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.databinding.BindingAdapter;
 

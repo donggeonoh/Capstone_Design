@@ -1,10 +1,17 @@
 package com.donggeon.honmaker.ui.ingredient;
 
-public class Ingredient {
-    private int imageResId;
-    private int name;
+import com.donggeon.honmaker.R;
 
-    public Ingredient(int imageResId, int name) {
+public enum Ingredient {
+
+    HAM(R.drawable.ic_ham, "햄"),
+    TUNA(R.drawable.ic_tuna, "참치"),
+    CHEEZE(R.drawable.ic_cheese, "치즈");
+
+    private int imageResId;
+    private String name;
+
+    Ingredient(int imageResId, String name) {
         this.imageResId = imageResId;
         this.name = name;
     }
@@ -13,15 +20,7 @@ public class Ingredient {
         return imageResId;
     }
 
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
-    }
-
-    public int getName() {
+    public String getName() {
         return name;
-    }
-
-    public void setName(int name) {
-        this.name = name;
     }
 }
