@@ -11,15 +11,19 @@
         <com.donggeon.honmaker.ui.camera.CameraView
             android:id="@+id/view_finder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:captureId="@{@id/iv_camera}" />
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="28dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="36dp"
+            android:background="@drawable/shape_circle"
             android:elevation="2dp"
+            android:padding="12dp"
             android:src="@drawable/ic_camera_48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

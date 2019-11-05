@@ -1,16 +1,16 @@
-package com.donggeon.honmaker.ui.image;
+package com.donggeon.honmaker.ui.ingredient;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.ObservableBoolean;
 
 import com.donggeon.honmaker.R;
-import com.donggeon.honmaker.databinding.ActivityImageBinding;
+import com.donggeon.honmaker.databinding.ActivityIngredientBinding;
 import com.donggeon.honmaker.extension.databinding.ImageViewAdapters;
 import com.donggeon.honmaker.extension.mlkit.VisionImageGetter;
 import com.donggeon.honmaker.ui.BaseActivity;
@@ -21,25 +21,26 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText;
 
 import java.util.Arrays;
 
-public class ImageActivity extends BaseActivity<ActivityImageBinding> {
+public class IngredientActivity extends BaseActivity<ActivityIngredientBinding> {
     private static final String EXTRA_FILE_PATH = "EXTRA_FILE_PATH";
 
-    private String filePath;
+    public ObservableBoolean isLoading = new ObservableBoolean(false);
+    public ObservableString filePath = new ObservableString();
 
     public static Intent getLaunchIntent(@NonNull final Context context,
                                          @NonNull final String path) {
-        Intent intent = new Intent(context, ImageActivity.class);
+        Intent intent = new Intent(context, IngredientActivity.class);
         intent.putExtra(EXTRA_FILE_PATH, path);
         return intent;
     }
 
     private void getExtras(@NonNull final Intent intent) {
-        this.filePath = intent.getStringExtra(EXTRA_FILE_PATH);
+        this.filePath.set(intent.getStringExtra(EXTRA_FILE_PATH));
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_image;
+        return R.layout.activity_ingredient;
     }
 
     @Override
@@ -50,25 +51,24 @@ public class ImageActivity extends BaseActivity<ActivityImageBinding> {
     }
 
     private void initViews() {
-        ImageViewAdapters.loadImageFromFile(binding.ivImage, filePath);
-        binding.tvStart.setOnClickListener(__ -> startAnalyze());
+        startAnalyze();
     }
 
     private void startAnalyze() {
-        analyze(VisionImageGetter.getImagefromBitmap(BitmapFactory.decodeFile(filePath)));
+        isLoading.set(true);
+        analyze(VisionImageGetter.getImageFromFilePath(this, filePath));
     }
 
     private void analyze(@NonNull final FirebaseVisionImage image) {
-        Log.d("VisionImage", "analyze with image : " + image.toString());
-
-        FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
-                .setLanguageHints(Arrays.asList("en", "ko")).build();
+        FirebaseVisionCloudTextRecognizerOptions options =
+                new FirebaseVisionCloudTextRecognizerOptions.Builder()
+                        .setLanguageHints(Arrays.asList("en", "ko")).build();
 
         FirebaseVision.getInstance()
                 .getCloudTextRecognizer(options)
                 .processImage(image)
                 .addOnSuccessListener(result -> {
-                    Log.d("VisionImage", "text: " + result.getText());
+                    isLoading.set(false);
                     for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
                         Log.d("VisionImage", "text: " + textBlock.getText());
                     }

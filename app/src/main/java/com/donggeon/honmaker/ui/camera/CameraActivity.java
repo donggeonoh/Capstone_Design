@@ -9,7 +9,7 @@ import androidx.camera.core.ImageCapture;
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.databinding.ActivityCameraBinding;
 import com.donggeon.honmaker.ui.BaseActivity;
-import com.donggeon.honmaker.ui.image.ImageActivity;
+import com.donggeon.honmaker.ui.ingredient.IngredientActivity;
 
 import java.io.File;
 
@@ -27,22 +27,22 @@ public class CameraActivity extends BaseActivity<ActivityCameraBinding> {
     }
 
     private void initViews() {
-        binding.viewFinder.setImageCaptureButton(binding.ivCamera);
-        binding.viewFinder.setImageCaptureListener(new ImageCapture.OnImageSavedListener() {
-            @Override
-            public void onImageSaved(@NonNull File file) {
-                startImageActivity(file.getAbsolutePath());
-            }
+        binding.viewFinder.setImageCaptureButton(binding.ivCamera,
+                new ImageCapture.OnImageSavedListener() {
+                    @Override
+                    public void onImageSaved(@NonNull File file) {
+                        startImageActivity(file.getAbsolutePath());
+                    }
 
-            @Override
-            public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError,
-                                @NonNull String message, @Nullable Throwable cause) {
+                    @Override
+                    public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError,
+                                        @NonNull String message, @Nullable Throwable cause) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void startImageActivity(String path) {
-        startActivity(ImageActivity.getLaunchIntent(this, path));
+        startActivity(IngredientActivity.getLaunchIntent(this, path));
     }
 }

@@ -16,7 +16,7 @@ import androidx.camera.core.PreviewConfig;
 
 import java.lang.ref.WeakReference;
 
-public class AutoFitPreviewBuilder {
+public class CameraPreviewBuilder {
     @NonNull
     private final PreviewConfig config;
     @NonNull
@@ -79,8 +79,8 @@ public class AutoFitPreviewBuilder {
         }
     };
 
-    private AutoFitPreviewBuilder(@NonNull final PreviewConfig config,
-                                  @NonNull final CameraView cameraView) {
+    private CameraPreviewBuilder(@NonNull final PreviewConfig config,
+                                 @NonNull final CameraView cameraView) {
         this.config = config;
         this.cameraViewRef = new WeakReference<>(cameraView);
         init();
@@ -102,7 +102,7 @@ public class AutoFitPreviewBuilder {
                 return;
             }
 
-            Log.d("AutoFitPreviewBuilder", "Preview output changed. " +
+            Log.d("CameraPreviewBuilder", "Preview output changed. " +
                     "Size: " + output.getTextureSize() + ", Rotation: " + output.getRotationDegrees());
 
             // To update the SurfaceTexture, we have to remove it and re-add it
@@ -123,7 +123,7 @@ public class AutoFitPreviewBuilder {
         cameraView.addOnLayoutChangeListener((view, left, top, right, bottom, a, b, c, d) -> {
             CameraView viewFinder = (CameraView) view;
             Size newViewFinderDimens = new Size(right - left, bottom - top);
-            Log.d("AutoFitPreviewBuilder", "View finder layout changed. Size: " + newViewFinderDimens);
+            Log.d("CameraPreviewBuilder", "View finder layout changed. Size: " + newViewFinderDimens);
             int rotation = getDisplaySurfaceRotation(viewFinder.getDisplay());
             updateTransform(viewFinder, rotation, bufferDimens, newViewFinderDimens);
         });
@@ -181,7 +181,7 @@ public class AutoFitPreviewBuilder {
         }
 
         Matrix matrix = new Matrix();
-        Log.d("AutoFitPreviewBuilder", "Applying output transformation.\n" +
+        Log.d("CameraPreviewBuilder", "Applying output transformation.\n" +
                 "View finder size: " + viewFinderDimens + "\n" +
                 "Preview output size: " + bufferDimens + "\n" +
                 "View finder rotation: " + viewFinderRotation + "\n" +
@@ -235,6 +235,6 @@ public class AutoFitPreviewBuilder {
 
     public static Preview build(@NonNull final PreviewConfig config,
                                 @NonNull final CameraView cameraView) {
-        return new AutoFitPreviewBuilder(config, cameraView).preview;
+        return new CameraPreviewBuilder(config, cameraView).preview;
     }
 }

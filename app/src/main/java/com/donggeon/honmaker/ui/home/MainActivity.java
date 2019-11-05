@@ -14,7 +14,7 @@ import com.donggeon.honmaker.extension.ted.ImagePickerUtil;
 import com.donggeon.honmaker.extension.ted.PermissionUtil;
 import com.donggeon.honmaker.ui.BaseActivity;
 import com.donggeon.honmaker.ui.camera.CameraActivity;
-import com.donggeon.honmaker.ui.image.ImageActivity;
+import com.donggeon.honmaker.ui.ingredient.IngredientActivity;
 
 @SuppressLint("CheckResult")
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     private void startImageActivity(@NonNull final String filePath) {
-        startActivity(ImageActivity.getLaunchIntent(this, filePath));
+        startActivity(IngredientActivity.getLaunchIntent(this, filePath));
     }
 
     private void startCameraActivity() {
