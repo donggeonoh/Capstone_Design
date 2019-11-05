@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
+import com.donggeon.honmaker.R;
+
 
 public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatActivity {
 

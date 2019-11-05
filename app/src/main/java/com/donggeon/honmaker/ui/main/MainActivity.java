@@ -1,4 +1,4 @@
-package com.donggeon.honmaker.ui.home;
+package com.donggeon.honmaker.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

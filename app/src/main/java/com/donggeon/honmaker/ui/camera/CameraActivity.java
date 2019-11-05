@@ -1,6 +1,7 @@
 package com.donggeon.honmaker.ui.camera;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +27,19 @@ public class CameraActivity extends BaseActivity<ActivityCameraBinding> {
         initViews();
     }
 
+    @Override
+    protected void onPause() {
+        overridePendingTransition(0, 0);
+        super.onPause();
+    }
+
     private void initViews() {
+        binding.viewFinder.post(() -> {
+            ViewGroup.LayoutParams params = binding.viewFinder.getLayoutParams();
+            params.height = binding.viewFinder.getWidth() / 3 * 4;
+            binding.viewFinder.requestLayout();
+        });
+
         binding.viewFinder.setImageCaptureButton(binding.ivCamera,
                 new ImageCapture.OnImageSavedListener() {
                     @Override

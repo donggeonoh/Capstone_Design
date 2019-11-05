@@ -20,7 +20,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity android:name=".ui.camera.CameraActivity"/>
-        <activity android:name=".ui.home.MainActivity">
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

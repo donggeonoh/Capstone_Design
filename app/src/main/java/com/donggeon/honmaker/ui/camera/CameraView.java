@@ -58,8 +58,7 @@ public class CameraView extends TextureView {
 
     private void initLayout() {
         post(() -> {
-            ViewGroup.LayoutParams params = getLayoutParams();
-            params.height = params.width / rational.getNumerator() * rational.getDenominator();
+            getLayoutParams().height = getWidth() / rational.getNumerator() * rational.getDenominator();
             requestLayout();
         });
     }
