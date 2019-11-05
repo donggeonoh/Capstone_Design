@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     private void startAlbumActivity() {
         ImagePickerUtil.startImagePicker(this)
-                .subscribe(uri -> startImageActivity(uri.toString()),
+                .subscribe(uri -> startImageActivity(uri.getPath()),
                         Throwable::printStackTrace);
     }
 
