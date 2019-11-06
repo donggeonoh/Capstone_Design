@@ -14,8 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * DataBinding 을 위한 어댑터
+ * 여기 있는건 ViewGroup 에 적용할 수 있는 어댑터들
+ * <p>
+ * LinearLayout, RelativeLayout, ConstraintLayout 같은 레이아웃이나
+ * RecyclerView, ViewPager 등 다른 뷰를 담고있는 뷰 그룹 들이 있음
+ */
 public class ViewGroupAdapters {
 
+    /**
+     * 리사이클러뷰에 뷰여줄 item 들을 어댑터에 추가
+     */
     @SuppressWarnings("unchecked")
     @BindingAdapter({"items"})
     public static <T, VH extends RecyclerView.ViewHolder> void setItems(
@@ -27,6 +37,11 @@ public class ViewGroupAdapters {
         }
     }
 
+    /**
+     * 리사이클러뷰의 orientation 변경
+     *
+     * @param orientation LinearLayoutManager.VERTICAL or HORIZONTAL
+     */
     @BindingAdapter({"android:orientation"})
     public static void setLayoutOrientation(@NonNull final RecyclerView recyclerView,
                                             final int orientation) {

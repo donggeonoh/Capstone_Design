@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     private void checkPermission() {
-        PermissionUtil.observeCheckPermission(
+        PermissionUtil.requestPermission(this,
                 Manifest.permission.CAMERA,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE

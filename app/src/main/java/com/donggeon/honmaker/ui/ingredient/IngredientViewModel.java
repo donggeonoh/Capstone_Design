@@ -22,7 +22,6 @@ import io.reactivex.subjects.PublishSubject;
 
 @SuppressLint("CheckResult")
 public class IngredientViewModel extends BaseViewModel {
-    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     public final MutableLiveData<String> filePath = new MutableLiveData<>();
     public final MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>(new ArrayList<>());
 
@@ -32,10 +31,11 @@ public class IngredientViewModel extends BaseViewModel {
         resultList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
-                    this.isLoading.setValue(false);
+                    this.loading.setValue(false);
                     this.ingredientList.setValue(list);
                 }, error -> {
-                    this.isLoading.setValue(false);
+                    this.loading.setValue(false);
+                    this.error.setValue(error);
                     error.printStackTrace();
                 });
     }
@@ -58,7 +58,7 @@ public class IngredientViewModel extends BaseViewModel {
                 new FirebaseVisionCloudTextRecognizerOptions.Builder()
                         .setLanguageHints(Arrays.asList("en", "ko")).build();
 
-        this.isLoading.setValue(true);
+        this.loading.setValue(true);
         FirebaseVision.getInstance()
                 .getCloudTextRecognizer(options)
                 .processImage(image)
