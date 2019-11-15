@@ -30,6 +30,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ingredient.IngredientActivity" />
+        <activity android:name=".ui.food.FoodActivity" />
+        <activity android:name=".ui.recipe.RecipeActivity" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"

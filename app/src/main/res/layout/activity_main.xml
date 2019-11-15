@@ -11,31 +11,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_drawer"
-            app:layout_constraintBottom_toTopOf="@id/iv_fridge_top"
+            app:layout_constraintBottom_toTopOf="@id/iv_freeze"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_fridge_top"
+            android:id="@+id/iv_freeze"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_fridge_top"
-            app:layout_constraintBottom_toTopOf="@id/iv_fridge_bottom"
+            app:layout_constraintBottom_toTopOf="@id/iv_fridge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_drawer" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_fridge_bottom"
+            android:id="@+id/iv_fridge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_fridge_bottom"
             app:layout_constraintBottom_toTopOf="@id/iv_recipe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_fridge_top" />
+            app:layout_constraintTop_toBottomOf="@id/iv_freeze" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_camera"

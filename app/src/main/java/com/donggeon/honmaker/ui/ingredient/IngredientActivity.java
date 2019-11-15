@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.databinding.ActivityIngredientBinding;
@@ -47,6 +48,7 @@ public class IngredientActivity extends BaseActivity<ActivityIngredientBinding> 
     }
 
     private void initView() {
+        binding.rvIngredient.setLayoutManager(new GridLayoutManager(this, 3));
         binding.rvIngredient.setAdapter(new IngredientAdapter());
     }
 

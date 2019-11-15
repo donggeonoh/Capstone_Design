@@ -17,12 +17,10 @@ import com.donggeon.honmaker.extension.ted.PermissionUtil;
 import com.donggeon.honmaker.ui.BaseActivity;
 import com.donggeon.honmaker.ui.camera.CameraActivity;
 import com.donggeon.honmaker.ui.ingredient.IngredientActivity;
+import com.donggeon.honmaker.ui.ingredient.Place;
+import com.donggeon.honmaker.ui.food.FoodActivity;
 import com.donggeon.honmaker.ui.storageActivity.StorageActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressLint("CheckResult")
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
-    
+
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Retrofit mRetrofit;
     private RetrofitAPI mRetrofitAPI;
@@ -43,23 +41,24 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             String result = response.body();
             Log.d("Retrofit", result);
         }
-    
+
         @Override
         public void onFailure(Call<String> call, Throwable t) {
             t.printStackTrace();
         }
     };
-    
+
     private void callUid(String uid) {
         mCallList = mRetrofitAPI.login(uid);
         mCallList.enqueue(mRetrofitCallback);
     }
-    
+
     private void setRetrofit() {
-        mRetrofit = new Retrofit.Builder().baseUrl("http://52.79.234.234").addConverterFactory(GsonConverterFactory.create()).build();
+        mRetrofit = new Retrofit.Builder().baseUrl("http://52.79.234.234:80/")
+                .addConverterFactory(GsonConverterFactory.create()).build();
         mRetrofitAPI = mRetrofit.create(RetrofitAPI.class);
     }
-    
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -69,34 +68,28 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetrofit();
-    
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        mAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-                    Log.d("Login", "Sign in anonymously : " + mAuth.getCurrentUser().getUid());
-                    callUid(mAuth.getCurrentUser().getUid());
-                } else {
-                    Log.w("Login", "signInAnonymously:failure", task.getException());
-                }
-            
+
+        mAuth.signInAnonymously().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                Log.d("Login", "Sign in anonymously : " + mAuth.getCurrentUser().getUid());
+                callUid(mAuth.getCurrentUser().getUid());
+            } else {
+                Log.w("Login", "signInAnonymously:failure", task.getException());
             }
         });
+
         initViews();
     }
-    
-    
+
     private void initViews() {
         binding.ivCamera.setOnClickListener(__ -> checkPermission());
         binding.ivAlbum.setOnClickListener(__ -> startAlbumActivity());
-        binding.ivDrawer.setOnClickListener(__ -> startDrawerActivity());
+        binding.ivDrawer.setOnClickListener(__ -> startStorageActivity(Place.ROOM));
+        binding.ivFreeze.setOnClickListener(__ -> startStorageActivity(Place.FREEZE));
+        binding.ivFridge.setOnClickListener(__ -> startStorageActivity(Place.FRIDGE));
+        binding.ivRecipe.setOnClickListener(__ -> startRecipeActivity());
     }
-    
-    private void startDrawerActivity() {
-        startActivity(new Intent(this, StorageActivity.class));
-    }
-    
+
     private void checkPermission() {
         PermissionUtil.requestPermission(this,
                 Manifest.permission.CAMERA,
@@ -104,6 +97,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         ).subscribe(result -> startCameraActivity(),
                 Throwable::printStackTrace);
+    }
+
+    private void startStorageActivity(Place place) {
+        startActivity(StorageActivity.getLaunchIntent(this, place));
     }
 
     private void startAlbumActivity() {
@@ -118,6 +115,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     private void startCameraActivity() {
         startActivity(new Intent(this, CameraActivity.class));
+    }
+
+    private void startRecipeActivity() {
+        startActivity(new Intent(this, FoodActivity.class));
     }
 
 }
