@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.databinding.ActivityMainBinding;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
+import com.donggeon.honmaker.extension.Retrofit.User;
 import com.donggeon.honmaker.extension.ted.ImagePickerUtil;
 import com.donggeon.honmaker.extension.ted.PermissionUtil;
 import com.donggeon.honmaker.ui.BaseActivity;
@@ -37,28 +38,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     private Retrofit mRetrofit;
     private RetrofitAPI mRetrofitAPI;
     private Call<String> mCallList;
-    private Callback<String> mRetrofitCallback = new Callback<String>() {
-        @Override
-        public void onResponse(Call<String> call, Response<String> response) {
-            String result = response.body();
-            Log.d("Retrofit", result);
-        }
-    
-        @Override
-        public void onFailure(Call<String> call, Throwable t) {
-            t.printStackTrace();
-        }
-    };
-    
-    private void callUid(String uid) {
-        mCallList = mRetrofitAPI.login(uid);
-        mCallList.enqueue(mRetrofitCallback);
-    }
-    
-    private void setRetrofit() {
-        mRetrofit = new Retrofit.Builder().baseUrl("http://52.79.234.234").addConverterFactory(GsonConverterFactory.create()).build();
-        mRetrofitAPI = mRetrofit.create(RetrofitAPI.class);
-    }
     
     @Override
     protected int getLayoutId() {
@@ -86,6 +65,28 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         initViews();
     }
     
+    private void setRetrofit() {
+        mRetrofit = new Retrofit.Builder().baseUrl("http://52.79.234.234:80")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        mRetrofitAPI = mRetrofit.create(RetrofitAPI.class);
+    }
+    
+    private void callUid(String uid) {
+        mCallList = mRetrofitAPI.login(new User(uid));
+        mCallList.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String result = response.body();
+                Log.d("Retrofit", result);
+            }
+            
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
     
     private void initViews() {
         binding.ivCamera.setOnClickListener(__ -> checkPermission());

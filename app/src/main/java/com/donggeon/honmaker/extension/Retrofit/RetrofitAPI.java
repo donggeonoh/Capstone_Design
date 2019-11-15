@@ -6,5 +6,5 @@ import retrofit2.http.POST;
 
 public interface RetrofitAPI {
     @POST("/")
-    Call<String> login(@Body String uid);
+    Call<String> login(@Body User user);
 }

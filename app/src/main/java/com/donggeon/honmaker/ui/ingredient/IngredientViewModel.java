@@ -1,6 +1,7 @@
 package com.donggeon.honmaker.ui.ingredient;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -63,15 +64,14 @@ public class IngredientViewModel extends BaseViewModel {
                 .getCloudTextRecognizer(options)
                 .processImage(image)
                 .addOnSuccessListener(result -> {
+                    StringBuilder str = new StringBuilder();
                     List<Ingredient> list = new ArrayList<>();
-                    for (Ingredient item : Ingredient.values()) {
-                        for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
-                            if (textBlock.getText().contains(item.getName())) {
-                                list.add(item);
-                                break;
-                            }
-                        }
+                    
+                    for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
+                        str.append(textBlock.getText());
                     }
+                    
+                    Log.d("Scan ", str.toString());
                     resultList.onNext(list);
                 })
                 .addOnFailureListener(error -> {
