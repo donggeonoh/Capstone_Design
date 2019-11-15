@@ -15,6 +15,7 @@ import com.donggeon.honmaker.extension.ted.PermissionUtil;
 import com.donggeon.honmaker.ui.BaseActivity;
 import com.donggeon.honmaker.ui.camera.CameraActivity;
 import com.donggeon.honmaker.ui.ingredient.IngredientActivity;
+import com.donggeon.honmaker.ui.storageActivity.StorageActivity;
 
 @SuppressLint("CheckResult")
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
@@ -33,8 +34,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     private void initViews() {
         binding.ivCamera.setOnClickListener(__ -> checkPermission());
         binding.ivAlbum.setOnClickListener(__ -> startAlbumActivity());
+        binding.ivDrawer.setOnClickListener(__ -> startDrawerActivity());
     }
-
+    
+    private void startDrawerActivity() {
+        startActivity(new Intent(this, StorageActivity.class));
+    }
+    
     private void checkPermission() {
         PermissionUtil.requestPermission(this,
                 Manifest.permission.CAMERA,

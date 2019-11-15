@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.donggeon.honmaker.R;
+
 public class IngredientAdapter extends ListAdapter<Ingredient, IngredientItemViewHolder> {
 
     public IngredientAdapter() {

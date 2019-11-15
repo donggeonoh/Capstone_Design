@@ -10,9 +10,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.databinding.ActivityIngredientBinding;
-import com.donggeon.honmaker.extension.mlkit.VisionImageGetter;
 import com.donggeon.honmaker.ui.BaseActivity;
 
+/**
+ * TODO 2019-11-15 : + 버튼이 있어 재료를 수동으로 추가할 수 있어야 하며
+ *  재료 아이콘을 클릭 할 시에 잘못 인식한 재료를 지울 수 있어야 합니다.
+ *  추가로 확인 버튼을 누르면 서버에 재료 데이터를 전송합니다.
+ */
 public class IngredientActivity extends BaseActivity<ActivityIngredientBinding> {
     private static final String EXTRA_FILE_PATH = "EXTRA_FILE_PATH";
 

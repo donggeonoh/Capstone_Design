@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <dist:module dist:instant="true" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -18,8 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".ui.camera.CameraActivity"/>
+        <activity android:name=".ui.storageActivity.StorageActivity"></activity>
+        <activity android:name=".ui.camera.CameraActivity" />
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +35,5 @@
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="ocr" />
     </application>
-
-    <dist:module dist:instant="true" />
 
 </manifest>

@@ -39,7 +39,7 @@ public abstract class BaseViewModel extends ViewModel implements AutoDisposableO
     public Maybe<Object> autoDisposeSignalMaybe() {
         return autoDisposeSignal.andThen(Maybe.error(new AutoDisposeException()));
     }
-
+    
     public Observable<Object> autoDisposeSignalObservable() {
         return autoDisposeSignal.andThen(Observable.error(new AutoDisposeException()));
     }

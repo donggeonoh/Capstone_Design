@@ -1,6 +1,7 @@
 package com.donggeon.honmaker.ui.ingredient;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -26,6 +27,7 @@ public class IngredientViewModel extends BaseViewModel {
     public final MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>(new ArrayList<>());
 
     private PublishSubject<List<Ingredient>> resultList = PublishSubject.create();
+    private PublishSubject<List<String>> resultList2 = PublishSubject.create();
 
     public IngredientViewModel() {
         resultList.subscribeOn(Schedulers.io())
@@ -63,6 +65,14 @@ public class IngredientViewModel extends BaseViewModel {
                 .getCloudTextRecognizer(options)
                 .processImage(image)
                 .addOnSuccessListener(result -> {
+                    List<String> list = new ArrayList<>();
+    
+                    for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
+                        // TODO: 2019-11-15 textBlock을 list에 넣고 서버에 요청함
+                        //  이후 응답을 받으면 재료가 local에 저장된다.
+                        Log.e("List : ", textBlock.getText());
+                    }
+                    /*
                     List<Ingredient> list = new ArrayList<>();
                     for (Ingredient item : Ingredient.values()) {
                         for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
@@ -72,7 +82,7 @@ public class IngredientViewModel extends BaseViewModel {
                             }
                         }
                     }
-                    resultList.onNext(list);
+                    resultList.onNext(list);*/
                 })
                 .addOnFailureListener(error -> {
                     resultList.onError(error);

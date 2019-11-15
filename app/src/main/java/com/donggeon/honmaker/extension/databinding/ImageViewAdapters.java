@@ -37,7 +37,7 @@ public class ImageViewAdapters {
 
         Glide.with(imageView).load(imageUri).into(imageView);
     }
-
+    
     /**
      * 이미지 파일을 ImageView 에 랜더링
      */
