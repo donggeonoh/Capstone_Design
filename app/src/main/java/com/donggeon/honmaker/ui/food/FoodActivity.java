@@ -13,6 +13,9 @@ import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.databinding.ActivityFoodBinding;
 import com.donggeon.honmaker.ui.BaseActivity;
 
+/**
+ * TODO : @
+ */
 public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
 
     @Override

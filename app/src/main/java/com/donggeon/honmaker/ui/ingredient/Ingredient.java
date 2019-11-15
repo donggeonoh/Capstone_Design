@@ -1,33 +1,45 @@
 package com.donggeon.honmaker.ui.ingredient;
 
-import com.donggeon.honmaker.R;
+import com.google.gson.annotations.SerializedName;
 
-public enum Ingredient {
-    HAM(R.drawable.ic_ham, "햄", Place.FRIDGE),
-    TUNA(R.drawable.ic_tuna, "참치", Place.FRIDGE),
-    SAUSAGE(R.drawable.ic_sausage, "소세지", Place.FREEZE),
-    SALT(R.drawable.ic_salt, "소금", Place.ROOM),
-    CHEESE(R.drawable.ic_cheese, "치즈", Place.FRIDGE);
-
-    private int imageResId;
+public class Ingredient {
+    
+    @SerializedName("ing_ImageURL")
+    private String imageUri;
+    
+    @SerializedName("ing_Name")
     private String name;
+    
+    @SerializedName("ing_Location")
     private Place place;
-
-    Ingredient(int imageResId, String name, Place place) {
-        this.imageResId = imageResId;
+    
+    public Ingredient(String imageUri, String name, Place place) {
+        this.imageUri = imageUri;
         this.name = name;
         this.place = place;
     }
-
-    public int getImageResId() {
-        return imageResId;
+    
+    public String getImageUri() {
+        return imageUri;
     }
-
+    
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+    
     public String getName() {
         return name;
     }
-
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public Place getPlace() {
         return place;
+    }
+    
+    public void setPlace(Place place) {
+        this.place = place;
     }
 }

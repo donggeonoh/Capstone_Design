@@ -17,7 +17,7 @@ public class IngredientItemViewHolder extends RecyclerView.ViewHolder {
         binding = DataBindingUtil.bind(itemView);
     }
 
-    void bindTo(@NonNull final Ingredient item) {
+    void bindTo(@NonNull final LegacyIngredient item) {
         binding.setItem(item);
     }
 }

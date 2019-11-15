@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.donggeon.honmaker.ui.ingredient.Ingredient" />
+            type="com.donggeon.honmaker.ui.ingredient.LegacyIngredient" />
     </data>
 
     <androidx.cardview.widget.CardView

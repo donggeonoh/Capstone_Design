@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.donggeon.honmaker.ui.BaseViewModel;
-import com.donggeon.honmaker.ui.ingredient.Ingredient;
+import com.donggeon.honmaker.ui.ingredient.LegacyIngredient;
 import com.donggeon.honmaker.ui.ingredient.Place;
 
 import java.util.ArrayList;
@@ -16,14 +16,14 @@ import java.util.List;
 @SuppressLint("CheckResult")
 public class StorageViewModel extends BaseViewModel {
     @NonNull
-    private final MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>();
+    private final MutableLiveData<List<LegacyIngredient>> ingredientList = new MutableLiveData<>();
     @NonNull
     private final MutableLiveData<Place> place = new MutableLiveData<>();
 
     public StorageViewModel() {
     }
 
-    public LiveData<List<Ingredient>> getIngredientList() {
+    public LiveData<List<LegacyIngredient>> getIngredientList() {
         return ingredientList;
     }
 
@@ -33,9 +33,9 @@ public class StorageViewModel extends BaseViewModel {
     }
 
     private void loadIngredientList() {
-        Ingredient[] values = Ingredient.values();
-        ArrayList<Ingredient> list = new ArrayList<>();
-        for (Ingredient value : values) {
+        LegacyIngredient[] values = LegacyIngredient.values();
+        ArrayList<LegacyIngredient> list = new ArrayList<>();
+        for (LegacyIngredient value : values) {
             if (value.getPlace() == place.getValue()) {
                 list.add(value);
             }

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.donggeon.honmaker.R;
 
-public class IngredientAdapter extends ListAdapter<Ingredient, IngredientItemViewHolder> {
+public class IngredientAdapter extends ListAdapter<LegacyIngredient, IngredientItemViewHolder> {
 
     public IngredientAdapter() {
         super(DIFF_CALLBACK);
@@ -24,21 +24,21 @@ public class IngredientAdapter extends ListAdapter<Ingredient, IngredientItemVie
 
     @Override
     public void onBindViewHolder(@NonNull IngredientItemViewHolder holder, int position) {
-        final Ingredient item = getItem(holder.getAdapterPosition());
+        final LegacyIngredient item = getItem(holder.getAdapterPosition());
         holder.bindTo(item);
     }
 
-    private static DiffUtil.ItemCallback<Ingredient> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<Ingredient>() {
+    private static DiffUtil.ItemCallback<LegacyIngredient> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<LegacyIngredient>() {
                 @Override
-                public boolean areItemsTheSame(@NonNull Ingredient oldItem,
-                                               @NonNull Ingredient newItem) {
+                public boolean areItemsTheSame(@NonNull LegacyIngredient oldItem,
+                                               @NonNull LegacyIngredient newItem) {
                     return oldItem.getImageResId() == newItem.getImageResId();
                 }
 
                 @Override
-                public boolean areContentsTheSame(@NonNull Ingredient oldItem,
-                                                  @NonNull Ingredient newItem) {
+                public boolean areContentsTheSame(@NonNull LegacyIngredient oldItem,
+                                                  @NonNull LegacyIngredient newItem) {
                     return oldItem.equals(newItem);
                 }
             };

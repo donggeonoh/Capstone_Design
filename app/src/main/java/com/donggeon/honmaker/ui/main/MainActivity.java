@@ -12,53 +12,27 @@ import androidx.annotation.Nullable;
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.databinding.ActivityMainBinding;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
+import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
+import com.donggeon.honmaker.extension.Retrofit.User;
 import com.donggeon.honmaker.extension.ted.ImagePickerUtil;
 import com.donggeon.honmaker.extension.ted.PermissionUtil;
 import com.donggeon.honmaker.ui.BaseActivity;
 import com.donggeon.honmaker.ui.camera.CameraActivity;
+import com.donggeon.honmaker.ui.food.FoodActivity;
 import com.donggeon.honmaker.ui.ingredient.IngredientActivity;
 import com.donggeon.honmaker.ui.ingredient.Place;
-import com.donggeon.honmaker.ui.food.FoodActivity;
 import com.donggeon.honmaker.ui.storageActivity.StorageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressLint("CheckResult")
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
-
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private Retrofit mRetrofit;
-    private RetrofitAPI mRetrofitAPI;
-    private Call<String> mCallList;
-    private Callback<String> mRetrofitCallback = new Callback<String>() {
-        @Override
-        public void onResponse(Call<String> call, Response<String> response) {
-            String result = response.body();
-            Log.d("Retrofit", result);
-        }
-
-        @Override
-        public void onFailure(Call<String> call, Throwable t) {
-            t.printStackTrace();
-        }
-    };
-
-    private void callUid(String uid) {
-        mCallList = mRetrofitAPI.login(uid);
-        mCallList.enqueue(mRetrofitCallback);
-    }
-
-    private void setRetrofit() {
-        mRetrofit = new Retrofit.Builder().baseUrl("http://52.79.234.234:80/")
-                .addConverterFactory(GsonConverterFactory.create()).build();
-        mRetrofitAPI = mRetrofit.create(RetrofitAPI.class);
-    }
-
+    
+    public static String uid;
+    
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -67,20 +41,41 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetrofit();
-
+    
+        anonymousLogin();
+        initViews();
+    }
+    
+    private void anonymousLogin() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        
         mAuth.signInAnonymously().addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
-                Log.d("Login", "Sign in anonymously : " + mAuth.getCurrentUser().getUid());
-                callUid(mAuth.getCurrentUser().getUid());
+                uid = mAuth.getCurrentUser().getUid();
+                Log.d("Login", "Sign in anonymously : " + uid);
+                
+                RetrofitAPI api = RetrofitClient.getClient().create(RetrofitAPI.class);
+                Call<String> call = api.login(new User(mAuth.getCurrentUser().getUid()));
+            
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        String result = response.body();
+                        Log.d("Retrofit", result);
+                    }
+                
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        // Log error here since request failed
+                        Log.e("tag", t.toString());
+                    }
+                });
             } else {
                 Log.w("Login", "signInAnonymously:failure", task.getException());
             }
         });
-
-        initViews();
     }
-
+    
     private void initViews() {
         binding.ivCamera.setOnClickListener(__ -> checkPermission());
         binding.ivAlbum.setOnClickListener(__ -> startAlbumActivity());
