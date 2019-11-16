@@ -13,4 +13,7 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="rating">평가하기</string>
+    <string name="submit">확인</string>
+    <string name="set_rating">당신의 점수는?</string>
 </resources>

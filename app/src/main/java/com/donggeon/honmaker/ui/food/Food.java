@@ -3,10 +3,11 @@ package com.donggeon.honmaker.ui.food;
 import java.util.Objects;
 
 public class Food {
+    
     private String foodName;
     private String imageUrl;
     private String recipeUrl;
-
+    
     public Food() {
     }
 

@@ -10,15 +10,18 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.ui.listener.ItemClickListener;
+import com.donggeon.honmaker.ui.listener.RatingClickListener;
 
 public class FoodAdapter extends ListAdapter<Food, FoodItemViewHolder> {
 
     @Nullable
     private ItemClickListener<Food> itemClickListener;
+    private RatingClickListener<Food> ratingClickListener;
 
-    public FoodAdapter(@Nullable ItemClickListener<Food> itemClickListener) {
+    public FoodAdapter(@Nullable ItemClickListener<Food> itemClickListener, RatingClickListener<Food> ratingClickListener) {
         super(DIFF_CALLBACK);
         this.itemClickListener = itemClickListener;
+        this.ratingClickListener = ratingClickListener;
     }
 
     @NonNull
@@ -36,6 +39,12 @@ public class FoodAdapter extends ListAdapter<Food, FoodItemViewHolder> {
         holder.itemView.setOnClickListener(__ -> {
             if (itemClickListener != null) {
                 itemClickListener.onItemClick(item);
+            }
+        });
+        
+        holder.getBinding().btRating.setOnClickListener(__ -> {
+            if (ratingClickListener != null) {
+                ratingClickListener.onRatingButtonClick(item);
             }
         });
     }

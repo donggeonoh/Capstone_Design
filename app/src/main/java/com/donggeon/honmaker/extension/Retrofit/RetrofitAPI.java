@@ -19,4 +19,7 @@ public interface RetrofitAPI {
     
     @GET("/recipe")
     Call<String> recipe(@Body String str);
+    
+    @POST("/rating/put")
+    Call<String> rating(@Body FoodRating data);
 }

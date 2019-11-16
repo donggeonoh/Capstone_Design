@@ -16,6 +16,10 @@ public class FoodItemViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         binding = DataBindingUtil.bind(itemView);
     }
+    
+    public ItemFoodBinding getBinding() {
+        return binding;
+    }
 
     void bindTo(@NonNull final Food item) {
         binding.setItem(item);
