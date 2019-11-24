@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.donggeon.honmaker.databinding.ItemFoodBinding;
+import com.donggeon.honmaker.data.Food;
 
 public class FoodItemViewHolder extends RecyclerView.ViewHolder {
 

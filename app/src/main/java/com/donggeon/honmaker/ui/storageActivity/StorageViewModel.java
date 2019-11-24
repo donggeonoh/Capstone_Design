@@ -1,29 +1,37 @@
 package com.donggeon.honmaker.ui.storageActivity;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.donggeon.honmaker.data.Ingredient;
+import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
+import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
 import com.donggeon.honmaker.ui.BaseViewModel;
-import com.donggeon.honmaker.ui.ingredient.LegacyIngredient;
 import com.donggeon.honmaker.ui.ingredient.Place;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 @SuppressLint("CheckResult")
 public class StorageViewModel extends BaseViewModel {
     @NonNull
-    private final MutableLiveData<List<LegacyIngredient>> ingredientList = new MutableLiveData<>();
+    private final MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>();
     @NonNull
     private final MutableLiveData<Place> place = new MutableLiveData<>();
 
     public StorageViewModel() {
     }
 
-    public LiveData<List<LegacyIngredient>> getIngredientList() {
+    public LiveData<List<Ingredient>> getIngredientList() {
         return ingredientList;
     }
 
@@ -33,13 +41,71 @@ public class StorageViewModel extends BaseViewModel {
     }
 
     private void loadIngredientList() {
-        LegacyIngredient[] values = LegacyIngredient.values();
-        ArrayList<LegacyIngredient> list = new ArrayList<>();
-        for (LegacyIngredient value : values) {
-            if (value.getPlace() == place.getValue()) {
-                list.add(value);
+    
+        Log.d("Storage Activity", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        
+        RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+        Call<List<Ingredient>> call = api.getAllIngredient(FirebaseAuth.getInstance().getUid());
+        
+        call.enqueue(new Callback<List<Ingredient>>() {
+            @Override
+            public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
+            
+                if(response.body().isEmpty()) {
+                    Log.d("Storage Activity", "Data is null");
+                }
+            
+                ArrayList<Ingredient> values = (ArrayList<Ingredient>) response.body();
+                ArrayList<Ingredient> list = new ArrayList<>();
+            
+                for (Ingredient value : values) {
+                    if (value.getPlace() == place.getValue()) {
+                        list.add(value);
+                    }
+                    Log.d("Storage Activity", "Name : " + value.getName() + " URI : " + value.getImageUri() + " PLACE : " + value.getPlace());
+                }
+            
+                ingredientList.setValue(list);
             }
-        }
-        ingredientList.setValue(list);
+        
+            @Override
+            public void onFailure(Call<List<Ingredient>> call, Throwable t) {
+                Log.d("Storage Activity", "FAIL");
+                t.printStackTrace();
+            }
+        });
+        
+        /*
+        RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+        Call<List<Ingredient>> call = api.getAllIngredient(new User(uid));
+    
+        call.enqueue(new Callback<List<Ingredient>>() {
+            @Override
+            public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
+                
+                if(response.body().isEmpty()) {
+                    Log.d("Storage Activity", "Data is null");
+                }
+                
+                ArrayList<Ingredient> values = (ArrayList<Ingredient>) response.body();
+                ArrayList<Ingredient> list = new ArrayList<>();
+                
+                for (Ingredient value : values) {
+                    if (value.getPlace() == place.getValue()) {
+                        list.add(value);
+                    }
+                    Log.d("Storage Activity", "Name : " + value.getName() + " URI : " + value.getImageUri() + " PLACE : " + value.getPlace());
+                }
+                
+                ingredientList.setValue(list);
+            }
+        
+            @Override
+            public void onFailure(Call<List<Ingredient>> call, Throwable t) {
+                Log.d("Storage Activity", "FAIL");
+                t.printStackTrace();
+            }
+        });
+        */
     }
 }

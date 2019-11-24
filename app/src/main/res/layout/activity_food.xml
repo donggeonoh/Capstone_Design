@@ -11,11 +11,50 @@
             type="com.donggeon.honmaker.ui.food.FoodViewModel" />
     </data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_food"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:items="@{vm.foodList}"
-        android:orientation="@{LinearLayoutManager.VERTICAL}"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:text="지금 당장 만들어보세요!"
+                android:gravity="center"
+                android:textSize="26dp"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_included_ingredient_food"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:items="@{vm.foodList}"
+                android:orientation="@{LinearLayoutManager.VERTICAL}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:gravity="center"
+                android:text="부족한 재료를 사서 만들어보세요"
+                android:textColor="@color/black"
+                android:textSize="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_not_included_ingredient_food"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:items="@{vm.nonFoodList}"
+                android:orientation="@{LinearLayoutManager.VERTICAL}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
 </layout>

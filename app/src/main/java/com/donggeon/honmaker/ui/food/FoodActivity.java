@@ -15,12 +15,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
 import com.donggeon.honmaker.R;
+import com.donggeon.honmaker.data.Food;
+import com.donggeon.honmaker.data.FoodRating;
 import com.donggeon.honmaker.databinding.ActivityFoodBinding;
-import com.donggeon.honmaker.extension.Retrofit.FoodRating;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
 import com.donggeon.honmaker.ui.BaseActivity;
-import com.donggeon.honmaker.ui.main.MainActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,8 +49,10 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
     }
 
     private void initViews() {
-        binding.rvFood.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        binding.rvFood.setAdapter(new FoodAdapter(this::startRecipeActivity, this::startRatingActivity));
+        binding.rvIncludedIngredientFood.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        binding.rvIncludedIngredientFood.setAdapter(new FoodAdapter(this::startRecipeActivity, this::startRatingActivity));
+        binding.rvNotIncludedIngredientFood.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        binding.rvNotIncludedIngredientFood.setAdapter(new FoodAdapter(this::startRecipeActivity, this::startRatingActivity));
     }
     
     private void startRatingActivity(Food item) {
@@ -61,9 +64,45 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
         AppCompatTextView textView = view.findViewById(R.id.tv_submit);
         
         ad.show();
-    
+        
         textView.setOnClickListener(__ -> {
+    
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+    
+            auth.signInAnonymously().addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    
+                    float rating = ratingBar.getRating();
+                    Log.d("dialog message", "rating : " + rating);
+                    Log.d("dialog message", "item : " + item.getFoodName());
+                    Log.d("dialog message", "item resources : " + item.getImageUrl() + ", " + item.getRecipeUrl());
+                    Log.d("dialog message", "uid : " + auth.getCurrentUser().getUid());
+    
+                    RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+                    Call<String> call = api.rating(new FoodRating(auth.getCurrentUser().getUid(), item.getFoodName(), rating));
+    
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            String result = response.body();
+                            Log.d("dialog message", result);
+            
+                            ad.dismiss();
+                        }
+        
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            ad.dismiss();
+                        }
+                    });
+                } else {
+                    Log.w("Login", "signInAnonymously:failure", task.getException());
+                }
+            });
+            
+            /*
             // TODO rating 수치와 item 그리고 uid 전송
+            String uid = MainActivity.uid;
             float rating = ratingBar.getRating();
         
             Log.d("dialog message", "rating : " + rating);
@@ -71,8 +110,8 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
             Log.d("dialog message", "item resources : " + item.getImageUrl() + ", " + item.getRecipeUrl());
             Log.d("dialog message", "uid : " + MainActivity.uid);
     
-            RetrofitAPI api = RetrofitClient.getClient().create(RetrofitAPI.class);
-            Call<String> call = api.rating(new FoodRating(MainActivity.uid, item.getFoodName(), rating));
+            RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+            Call<String> call = api.rating(new FoodRating(uid, item.getFoodName(), rating));
     
             call.enqueue(new Callback<String>() {
                 @Override
@@ -88,6 +127,7 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
                     ad.dismiss();
                 }
             });
+             */
         });
     }
     

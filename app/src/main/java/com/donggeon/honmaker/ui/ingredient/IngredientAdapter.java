@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.donggeon.honmaker.R;
+import com.donggeon.honmaker.data.Ingredient;
 
-public class IngredientAdapter extends ListAdapter<LegacyIngredient, IngredientItemViewHolder> {
+public class IngredientAdapter extends ListAdapter<Ingredient, IngredientItemViewHolder> {
 
     public IngredientAdapter() {
         super(DIFF_CALLBACK);
@@ -24,21 +25,21 @@ public class IngredientAdapter extends ListAdapter<LegacyIngredient, IngredientI
 
     @Override
     public void onBindViewHolder(@NonNull IngredientItemViewHolder holder, int position) {
-        final LegacyIngredient item = getItem(holder.getAdapterPosition());
+        final Ingredient item = getItem(holder.getAdapterPosition());
         holder.bindTo(item);
     }
 
-    private static DiffUtil.ItemCallback<LegacyIngredient> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<LegacyIngredient>() {
+    private static DiffUtil.ItemCallback<Ingredient> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Ingredient>() {
                 @Override
-                public boolean areItemsTheSame(@NonNull LegacyIngredient oldItem,
-                                               @NonNull LegacyIngredient newItem) {
-                    return oldItem.getImageResId() == newItem.getImageResId();
+                public boolean areItemsTheSame(@NonNull Ingredient oldItem,
+                                               @NonNull Ingredient newItem) {
+                    return oldItem == newItem;
                 }
 
                 @Override
-                public boolean areContentsTheSame(@NonNull LegacyIngredient oldItem,
-                                                  @NonNull LegacyIngredient newItem) {
+                public boolean areContentsTheSame(@NonNull Ingredient oldItem,
+                                                  @NonNull Ingredient newItem) {
                     return oldItem.equals(newItem);
                 }
             };

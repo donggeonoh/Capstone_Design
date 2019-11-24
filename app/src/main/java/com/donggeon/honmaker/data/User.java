@@ -1,8 +1,9 @@
-package com.donggeon.honmaker.extension.Retrofit;
+package com.donggeon.honmaker.data;
 
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+    
     @SerializedName("UID")
     private String uid;
     

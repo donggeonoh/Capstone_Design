@@ -1,11 +1,18 @@
-package com.donggeon.honmaker.ui.food;
+package com.donggeon.honmaker.data;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
 public class Food {
     
+    @SerializedName("rec_Name")
     private String foodName;
+    
+    @SerializedName("rec_imageURL")
     private String imageUrl;
+    
+    @SerializedName("rec_recipeURL")
     private String recipeUrl;
     
     public Food() {

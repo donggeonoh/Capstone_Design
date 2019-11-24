@@ -1,60 +1,75 @@
 package com.donggeon.honmaker.ui.food;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.donggeon.honmaker.data.Food;
+import com.donggeon.honmaker.data.FoodList;
+import com.donggeon.honmaker.data.User;
+import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
+import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
 import com.donggeon.honmaker.ui.BaseViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @SuppressLint("CheckResult")
 public class FoodViewModel extends BaseViewModel {
+    
     @NonNull
     private final MutableLiveData<List<Food>> foodList = new MutableLiveData<>();
+    
+    @NonNull
+    private final MutableLiveData<List<Food>> nonFoodList = new MutableLiveData<>();
 
     public FoodViewModel() {
-        List<Food> foodList = new ArrayList<>(Arrays.asList(
-                new Food("양파전",
-                        "http://file.okdab.com/UserFiles/searching/recipe/119300.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=421&own="),
-                new Food("소고기무국",
-                        "http://file.okdab.com/UserFiles/searching/recipe/049400.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=202&own="),
-                new Food("수정과",
-                        "http://file.okdab.com/UserFiles/searching/recipe/039800.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=171&own="),
-                new Food("미역국",
-                        "http://file.okdab.com/UserFiles/searching/recipe/004700.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=21&own="),
-                new Food("양파전",
-                        "http://file.okdab.com/UserFiles/searching/recipe/119300.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=421&own="),
-                new Food("소고기무국",
-                        "http://file.okdab.com/UserFiles/searching/recipe/049400.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=202&own="),
-                new Food("수정과",
-                        "http://file.okdab.com/UserFiles/searching/recipe/039800.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=171&own="),
-                new Food("미역국",
-                        "http://file.okdab.com/UserFiles/searching/recipe/004700.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=21&own="),
-                new Food("양파전",
-                        "http://file.okdab.com/UserFiles/searching/recipe/119300.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=421&own="),
-                new Food("양파전",
-                        "http://file.okdab.com/UserFiles/searching/recipe/119300.jpg",
-                        "http://www.horangi.kr/foodinfo/viewRecipe.asp?rid=421&own=")));
-
-        this.foodList.setValue(foodList);
+    
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+    
+        auth.signInAnonymously().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                
+                RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+                Call<FoodList> call = api.recommend(new User(auth.getCurrentUser().getUid()));
+    
+                call.enqueue(new Callback<FoodList>() {
+                    @Override
+                    public void onResponse(Call<FoodList> call, Response<FoodList> response) {
+    
+                        for (Food data : response.body().getContained()) {
+                            Log.d("FoodActivity", "name : " + data.getFoodName() + " uri : " + data.getImageUrl() + ", " + data.getRecipeUrl());
+                        }
+    
+                        foodList.setValue(response.body().getContained());
+                        nonFoodList.setValue(response.body().getUncontained());
+                    }
+        
+                    @Override
+                    public void onFailure(Call<FoodList> call, Throwable t) {
+            
+                    }
+                });
+            } else {
+                Log.w("Login", "signInAnonymously:failure", task.getException());
+            }
+        });
     }
 
     @NonNull
     public LiveData<List<Food>> getFoodList() {
         return foodList;
+    }
+    
+    @NonNull
+    public LiveData<List<Food>> getNonFoodList() {
+        return nonFoodList;
     }
 }

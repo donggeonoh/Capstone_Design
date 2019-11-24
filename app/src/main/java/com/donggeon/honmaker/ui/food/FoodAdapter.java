@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.donggeon.honmaker.R;
+import com.donggeon.honmaker.data.Food;
 import com.donggeon.honmaker.ui.listener.ItemClickListener;
 import com.donggeon.honmaker.ui.listener.RatingClickListener;
 
@@ -30,7 +31,7 @@ public class FoodAdapter extends ListAdapter<Food, FoodItemViewHolder> {
         return new FoodItemViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_food, parent, false));
     }
-
+    
     @Override
     public void onBindViewHolder(@NonNull FoodItemViewHolder holder, int position) {
         final Food item = getItem(holder.getAdapterPosition());

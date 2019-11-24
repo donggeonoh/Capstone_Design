@@ -1,17 +1,20 @@
-package com.donggeon.honmaker.ui.ingredient;
+package com.donggeon.honmaker.data;
 
+import com.donggeon.honmaker.ui.ingredient.Place;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
 
 public class Ingredient {
     
-    @SerializedName("ing_ImageURL")
-    private String imageUri;
+    @SerializedName("ing_Location")
+    private Place place;
     
     @SerializedName("ing_Name")
     private String name;
     
-    @SerializedName("ing_Location")
-    private Place place;
+    @SerializedName("ing_URL")
+    private String imageUri;
     
     public Ingredient(String imageUri, String name, Place place) {
         this.imageUri = imageUri;
@@ -41,5 +44,20 @@ public class Ingredient {
     
     public void setPlace(Place place) {
         this.place = place;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ingredient)) return false;
+        Ingredient that = (Ingredient) o;
+        return getImageUri().equals(that.getImageUri()) &&
+                getName().equals(that.getName()) &&
+                getPlace() == that.getPlace();
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(getImageUri(), getName(), getPlace());
     }
 }

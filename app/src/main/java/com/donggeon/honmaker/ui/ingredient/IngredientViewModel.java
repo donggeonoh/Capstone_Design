@@ -1,16 +1,18 @@
 package com.donggeon.honmaker.ui.ingredient;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.donggeon.honmaker.App;
+import com.donggeon.honmaker.data.Ingredient;
+import com.donggeon.honmaker.data.Text;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
-import com.donggeon.honmaker.extension.Retrofit.Text;
 import com.donggeon.honmaker.extension.mlkit.VisionImageGetter;
 import com.donggeon.honmaker.ui.BaseViewModel;
-import com.donggeon.honmaker.ui.main.MainActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
@@ -29,12 +31,11 @@ import retrofit2.Response;
 
 @SuppressLint("CheckResult")
 public class IngredientViewModel extends BaseViewModel {
+    
     public final MutableLiveData<String> filePath = new MutableLiveData<>();
-    public final MutableLiveData<List<LegacyIngredient>> ingredientList = new MutableLiveData<>(new ArrayList<>());
+    private static final MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>(new ArrayList<>());
     
-    public final MutableLiveData<List<Ingredient>> itemList = new MutableLiveData<>(new ArrayList<>());
-    
-    private PublishSubject<List<LegacyIngredient>> resultList = PublishSubject.create();
+    private PublishSubject<List<Ingredient>> resultList = PublishSubject.create();
     
     public IngredientViewModel() {
         resultList.subscribeOn(Schedulers.io())
@@ -74,8 +75,9 @@ public class IngredientViewModel extends BaseViewModel {
                 .addOnSuccessListener(result -> {
                     StringBuilder builder = new StringBuilder();
                     for (FirebaseVisionText.TextBlock textBlock : result.getTextBlocks()) {
-                        builder.append(textBlock);
+                        builder.append(textBlock.getText());
                     }
+                    Log.d("builder", builder.toString());
                     requestIngredients(builder.toString());
                 })
                 .addOnFailureListener(error -> {
@@ -85,16 +87,27 @@ public class IngredientViewModel extends BaseViewModel {
     }
     
     private void requestIngredients(String toString) {
+    
+        Log.d("Login", "Sign in anonymously : " + FirebaseAuth.getInstance().getUid());
         
-        RetrofitAPI api = RetrofitClient.getClient().create(RetrofitAPI.class);
-        Call<List<Ingredient>> call = api.ingredient(new Text(MainActivity.uid, toString));
+        RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+        Call<List<Ingredient>> call = api.ingredient(new Text(FirebaseAuth.getInstance().getUid(), toString));
         
         call.enqueue(new Callback<List<Ingredient>>() {
             @Override
             public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
                 List<Ingredient> result = response.body();
-    
-                itemList.setValue(result);
+                
+                if (result.isEmpty()) {
+                    Log.d("ingredient", "result is null");
+                    return;
+                }
+                
+                for (Ingredient data : result) {
+                    Log.d("ingredient", "response : " + data.getName() + " " + data.getImageUri() + " " + data.getPlace());
+                }
+                
+                ingredientList.setValue(result);
             }
             
             @Override
@@ -102,7 +115,50 @@ public class IngredientViewModel extends BaseViewModel {
             
             }
         });
+    }
         
+        /*
+        RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+        Call<List<Ingredient>> call = api.ingredient(new Text(MainActivity.uid, toString));
+        
+        call.enqueue(new Callback<List<Ingredient>>() {
+            @Override
+            public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
+                List<Ingredient> result = response.body();
+                
+                if(result.isEmpty()) {
+                    Log.d("ingredient", "result is null");
+                    return;
+                }
+    
+                for(Ingredient data : result) {
+                    Log.d("ingredient", "response : " + data.getName() + " " + data.getImageUri() + " " + data.getPlace());
+                }
+                
+                ingredientList.setValue(result);
+            }
+            
+            @Override
+            public void onFailure(Call<List<Ingredient>> call, Throwable t) {
+            
+            }
+        });
+        */
+    
+    public static void setValue(List<Ingredient> list) {
+        
+        if (list == null) {
+            return;
+        }
+        
+        for (Ingredient item : list) {
+            if (!ingredientList.getValue().contains(item)) {
+                ingredientList.getValue().add(item);
+            }
+        }
     }
     
+    public static MutableLiveData<List<Ingredient>> getIngredientList() {
+        return ingredientList;
+    }
 }

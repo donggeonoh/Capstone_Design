@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.donggeon.honmaker.databinding.ItemIngredientBinding;
+import com.donggeon.honmaker.data.Ingredient;
 
 public class IngredientItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -16,8 +17,8 @@ public class IngredientItemViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         binding = DataBindingUtil.bind(itemView);
     }
-
-    void bindTo(@NonNull final LegacyIngredient item) {
+    
+    void bindTo(@NonNull final Ingredient item) {
         binding.setItem(item);
     }
 }

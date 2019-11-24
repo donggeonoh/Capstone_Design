@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.donggeon.honmaker.ui.food.Food" />
+            type="com.donggeon.honmaker.data.Food" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

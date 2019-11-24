@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-/**
+ /**
  * 모든 액티비티는 BaseActivity 를 상속
  * 이거 쓰는 이유 : 데이터바인딩, 라이프사이클 등록을 한번에 처리하기 위함
  * <p>
@@ -29,7 +29,7 @@ public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatA
         // 라이프사이클 등록
         binding.setLifecycleOwner(this);
     }
-
+    
     @Override
     protected void onResume() {
         super.onResume();
