@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_ingredient"
+            android:textColor="#24AEC0"
+            android:textSize="32dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_ingredient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:gravity="center"
+            android:hint="@string/ingredient"
+            android:textSize="24dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_submit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:textSize="24dp" />
+
+    </LinearLayout>
+
+</layout>

@@ -36,10 +36,11 @@ public class FoodAdapter extends ListAdapter<Food, FoodItemViewHolder> {
     public void onBindViewHolder(@NonNull FoodItemViewHolder holder, int position) {
         final Food item = getItem(holder.getAdapterPosition());
         holder.bindTo(item);
-
+        
         holder.itemView.setOnClickListener(__ -> {
             if (itemClickListener != null) {
                 itemClickListener.onItemClick(item);
+                
             }
         });
         

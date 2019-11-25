@@ -29,6 +29,7 @@ public class StorageViewModel extends BaseViewModel {
     private final MutableLiveData<Place> place = new MutableLiveData<>();
 
     public StorageViewModel() {
+    
     }
 
     public LiveData<List<Ingredient>> getIngredientList() {
@@ -40,19 +41,19 @@ public class StorageViewModel extends BaseViewModel {
         loadIngredientList();
     }
 
-    private void loadIngredientList() {
-    
+    public void loadIngredientList() {
         Log.d("Storage Activity", FirebaseAuth.getInstance().getCurrentUser().getUid());
         
         RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-        Call<List<Ingredient>> call = api.getAllIngredient(FirebaseAuth.getInstance().getUid());
+        Call<List<Ingredient>> call = api.getAllIngredient(FirebaseAuth.getInstance().getCurrentUser().getUid());
         
         call.enqueue(new Callback<List<Ingredient>>() {
             @Override
             public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
-            
-                if(response.body().isEmpty()) {
+                
+                if(response.body() == null) {
                     Log.d("Storage Activity", "Data is null");
+                    return;
                 }
             
                 ArrayList<Ingredient> values = (ArrayList<Ingredient>) response.body();
@@ -64,7 +65,6 @@ public class StorageViewModel extends BaseViewModel {
                     }
                     Log.d("Storage Activity", "Name : " + value.getName() + " URI : " + value.getImageUri() + " PLACE : " + value.getPlace());
                 }
-            
                 ingredientList.setValue(list);
             }
         
@@ -74,38 +74,5 @@ public class StorageViewModel extends BaseViewModel {
                 t.printStackTrace();
             }
         });
-        
-        /*
-        RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-        Call<List<Ingredient>> call = api.getAllIngredient(new User(uid));
-    
-        call.enqueue(new Callback<List<Ingredient>>() {
-            @Override
-            public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
-                
-                if(response.body().isEmpty()) {
-                    Log.d("Storage Activity", "Data is null");
-                }
-                
-                ArrayList<Ingredient> values = (ArrayList<Ingredient>) response.body();
-                ArrayList<Ingredient> list = new ArrayList<>();
-                
-                for (Ingredient value : values) {
-                    if (value.getPlace() == place.getValue()) {
-                        list.add(value);
-                    }
-                    Log.d("Storage Activity", "Name : " + value.getName() + " URI : " + value.getImageUri() + " PLACE : " + value.getPlace());
-                }
-                
-                ingredientList.setValue(list);
-            }
-        
-            @Override
-            public void onFailure(Call<List<Ingredient>> call, Throwable t) {
-                Log.d("Storage Activity", "FAIL");
-                t.printStackTrace();
-            }
-        });
-        */
     }
 }

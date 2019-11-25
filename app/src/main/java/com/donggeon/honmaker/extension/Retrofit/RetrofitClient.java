@@ -5,8 +5,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     
+    //http://52.79.234.234:80/
+    
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://52.79.234.234:80/")
+            .baseUrl("http://10.0.2.2:8081/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 }

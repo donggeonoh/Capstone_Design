@@ -1,18 +1,30 @@
 package com.donggeon.honmaker.ui.storageActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.donggeon.honmaker.R;
+import com.donggeon.honmaker.data.DeleteIngredient;
+import com.donggeon.honmaker.data.Ingredient;
 import com.donggeon.honmaker.databinding.ActivityStorageBinding;
+import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
+import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
 import com.donggeon.honmaker.ui.BaseActivity;
 import com.donggeon.honmaker.ui.ingredient.IngredientAdapter;
 import com.donggeon.honmaker.ui.ingredient.Place;
+import com.google.firebase.auth.FirebaseAuth;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StorageActivity extends BaseActivity<ActivityStorageBinding> {
 
@@ -50,9 +62,48 @@ public class StorageActivity extends BaseActivity<ActivityStorageBinding> {
         binding.setVm(ViewModelProviders.of(this).get(StorageViewModel.class));
         binding.getVm().setPlace(place);
     }
-
+    
     private void initViews() {
         binding.rvIngredient.setLayoutManager(new GridLayoutManager(this, 4));
-        binding.rvIngredient.setAdapter(new IngredientAdapter());
+        binding.rvIngredient.setAdapter(new IngredientAdapter(this::startIngredientActivity));
+    }
+    
+    public void startIngredientActivity(Ingredient ingredient) {
+        
+        AlertDialog ad = new AlertDialog.Builder(this)
+                .setTitle("삭제")
+                .setMessage("삭제하시겠습니까?")
+                .setPositiveButton("확인", (dialog, which) -> {
+                    
+                    RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+                    Call<DeleteIngredient> call = api.deleteIngredient(FirebaseAuth.getInstance().getUid(), ingredient.getName());
+    
+                    call.enqueue(new Callback<DeleteIngredient>() {
+                        @Override
+                        public void onResponse(Call<DeleteIngredient> call, Response<DeleteIngredient> response) {
+                            DeleteIngredient item = response.body();
+    
+                            if(item == null) {
+                                Log.d("delete ingredient","값이 비어있습니다.");
+                                return;
+                            }
+                            
+                            Toast.makeText(getApplicationContext(), "값이 삭제되었습니다", Toast.LENGTH_SHORT).show();
+                            Log.d("delete ingredient", item.getIngredient().getName() + "이 삭제되었습니다.");
+                            
+                            binding.getVm().loadIngredientList();
+                        }
+    
+                        @Override
+                        public void onFailure(Call<DeleteIngredient> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                    
+                }).setNegativeButton("취소", (dialog, which) -> {
+            
+                }).create();
+        
+        ad.show();
     }
 }

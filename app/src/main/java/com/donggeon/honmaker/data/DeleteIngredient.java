@@ -2,23 +2,23 @@ package com.donggeon.honmaker.data;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AddIngredient {
+public class DeleteIngredient {
     
     @SerializedName("code")
-    int code;
+    String code;
     
     Ingredient ingredient;
     
-    public AddIngredient(int code, Ingredient ingredient) {
+    public DeleteIngredient(String code, Ingredient ingredient) {
         this.code = code;
         this.ingredient = ingredient;
     }
     
-    public int getCode() {
+    public String getCode() {
         return code;
     }
     
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
     

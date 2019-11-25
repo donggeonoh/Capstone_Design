@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.donggeon.honmaker.data.Food;
 import com.donggeon.honmaker.data.FoodList;
-import com.donggeon.honmaker.data.User;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
 import com.donggeon.honmaker.ui.BaseViewModel;
@@ -29,36 +28,27 @@ public class FoodViewModel extends BaseViewModel {
     
     @NonNull
     private final MutableLiveData<List<Food>> nonFoodList = new MutableLiveData<>();
-
+    
     public FoodViewModel() {
     
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
+        Call<FoodList> call = api.recommend(FirebaseAuth.getInstance().getCurrentUser().getUid());
     
-        auth.signInAnonymously().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                
-                RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-                Call<FoodList> call = api.recommend(new User(auth.getCurrentUser().getUid()));
-    
-                call.enqueue(new Callback<FoodList>() {
-                    @Override
-                    public void onResponse(Call<FoodList> call, Response<FoodList> response) {
-    
-                        for (Food data : response.body().getContained()) {
-                            Log.d("FoodActivity", "name : " + data.getFoodName() + " uri : " + data.getImageUrl() + ", " + data.getRecipeUrl());
-                        }
-    
-                        foodList.setValue(response.body().getContained());
-                        nonFoodList.setValue(response.body().getUncontained());
-                    }
-        
-                    @Override
-                    public void onFailure(Call<FoodList> call, Throwable t) {
+        call.enqueue(new Callback<FoodList>() {
+            @Override
+            public void onResponse(Call<FoodList> call, Response<FoodList> response) {
             
-                    }
-                });
-            } else {
-                Log.w("Login", "signInAnonymously:failure", task.getException());
+                for (Food data : response.body().getContained()) {
+                    Log.d("FoodActivity", "name : " + data.getFoodName() + " uri : " + data.getImageUrl() + ", " + data.getRecipeUrl());
+                }
+            
+                foodList.setValue(response.body().getContained());
+                nonFoodList.setValue(response.body().getUncontained());
+            }
+        
+            @Override
+            public void onFailure(Call<FoodList> call, Throwable t) {
+            
             }
         });
     }

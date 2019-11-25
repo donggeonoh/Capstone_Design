@@ -46,9 +46,11 @@
                     tools:listitem="@layout/item_ingredient" />
 
             </LinearLayout>
+
         </androidx.core.widget.NestedScrollView>
 
         <ProgressBar
+            android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -59,4 +61,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </FrameLayout>
+
 </layout>

@@ -34,7 +34,6 @@ public class IngredientViewModel extends BaseViewModel {
     
     public final MutableLiveData<String> filePath = new MutableLiveData<>();
     private static final MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>(new ArrayList<>());
-    
     private PublishSubject<List<Ingredient>> resultList = PublishSubject.create();
     
     public IngredientViewModel() {
@@ -100,13 +99,15 @@ public class IngredientViewModel extends BaseViewModel {
                 
                 if (result.isEmpty()) {
                     Log.d("ingredient", "result is null");
+                    loading.setValue(false);
                     return;
                 }
                 
                 for (Ingredient data : result) {
                     Log.d("ingredient", "response : " + data.getName() + " " + data.getImageUri() + " " + data.getPlace());
                 }
-                
+    
+                loading.setValue(false);
                 ingredientList.setValue(result);
             }
             
@@ -116,34 +117,6 @@ public class IngredientViewModel extends BaseViewModel {
             }
         });
     }
-        
-        /*
-        RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-        Call<List<Ingredient>> call = api.ingredient(new Text(MainActivity.uid, toString));
-        
-        call.enqueue(new Callback<List<Ingredient>>() {
-            @Override
-            public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
-                List<Ingredient> result = response.body();
-                
-                if(result.isEmpty()) {
-                    Log.d("ingredient", "result is null");
-                    return;
-                }
-    
-                for(Ingredient data : result) {
-                    Log.d("ingredient", "response : " + data.getName() + " " + data.getImageUri() + " " + data.getPlace());
-                }
-                
-                ingredientList.setValue(result);
-            }
-            
-            @Override
-            public void onFailure(Call<List<Ingredient>> call, Throwable t) {
-            
-            }
-        });
-        */
     
     public static void setValue(List<Ingredient> list) {
         

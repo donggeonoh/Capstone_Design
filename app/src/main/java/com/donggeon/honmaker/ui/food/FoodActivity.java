@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,7 +60,7 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
         
         View view = getLayoutInflater().inflate(R.layout.dialog_rating, null);
         AlertDialog ad = new AlertDialog.Builder(this).setView(view).create();
-    
+        
         RatingBar ratingBar = view.findViewById(R.id.rb_rating_food);
         AppCompatTextView textView = view.findViewById(R.id.tv_submit);
         
@@ -67,51 +68,14 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
         
         textView.setOnClickListener(__ -> {
     
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-    
-            auth.signInAnonymously().addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    
-                    float rating = ratingBar.getRating();
-                    Log.d("dialog message", "rating : " + rating);
-                    Log.d("dialog message", "item : " + item.getFoodName());
-                    Log.d("dialog message", "item resources : " + item.getImageUrl() + ", " + item.getRecipeUrl());
-                    Log.d("dialog message", "uid : " + auth.getCurrentUser().getUid());
-    
-                    RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-                    Call<String> call = api.rating(new FoodRating(auth.getCurrentUser().getUid(), item.getFoodName(), rating));
-    
-                    call.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            String result = response.body();
-                            Log.d("dialog message", result);
-            
-                            ad.dismiss();
-                        }
-        
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            ad.dismiss();
-                        }
-                    });
-                } else {
-                    Log.w("Login", "signInAnonymously:failure", task.getException());
-                }
-            });
-            
-            /*
-            // TODO rating 수치와 item 그리고 uid 전송
-            String uid = MainActivity.uid;
             float rating = ratingBar.getRating();
-        
             Log.d("dialog message", "rating : " + rating);
             Log.d("dialog message", "item : " + item.getFoodName());
             Log.d("dialog message", "item resources : " + item.getImageUrl() + ", " + item.getRecipeUrl());
-            Log.d("dialog message", "uid : " + MainActivity.uid);
+            Log.d("dialog message", "uid : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
     
             RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-            Call<String> call = api.rating(new FoodRating(uid, item.getFoodName(), rating));
+            Call<String> call = api.rating(new FoodRating(FirebaseAuth.getInstance().getCurrentUser().getUid(), item.getFoodName(), rating));
     
             call.enqueue(new Callback<String>() {
                 @Override
@@ -119,15 +83,15 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
                     String result = response.body();
                     Log.d("dialog message", result);
                     
+                    Toast.makeText(FoodActivity.this, rating + "점을 주었습니다.", Toast.LENGTH_SHORT).show();
                     ad.dismiss();
                 }
-    
+        
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
                     ad.dismiss();
                 }
             });
-             */
         });
     }
     
