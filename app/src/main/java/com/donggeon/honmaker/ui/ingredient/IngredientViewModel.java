@@ -77,6 +77,7 @@ public class IngredientViewModel extends BaseViewModel {
                         builder.append(textBlock.getText());
                     }
                     Log.d("builder", builder.toString());
+                    loading.setValue(false);
                     requestIngredients(builder.toString());
                 })
                 .addOnFailureListener(error -> {
@@ -97,10 +98,10 @@ public class IngredientViewModel extends BaseViewModel {
             public void onResponse(Call<List<Ingredient>> call, Response<List<Ingredient>> response) {
                 List<Ingredient> result = response.body();
                 
-                if (result.isEmpty()) {
-                    Log.d("ingredient", "result is null");
-                    loading.setValue(false);
-                    return;
+                if(result == null) {
+                
+                } else if(result.isEmpty()) {
+                
                 }
                 
                 for (Ingredient data : result) {
