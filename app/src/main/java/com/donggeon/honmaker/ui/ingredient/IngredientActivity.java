@@ -19,7 +19,6 @@ public class IngredientActivity extends BaseActivity<ActivityIngredientBinding> 
     private static final String EXTRA_FILE_PATH = "EXTRA_FILE_PATH";
     
     private String filePath;
-
     public static Intent getLaunchIntent(@NonNull final Context context,
                                          @NonNull final String path) {
         Intent intent = new Intent(context, IngredientActivity.class);

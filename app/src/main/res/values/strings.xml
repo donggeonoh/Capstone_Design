@@ -18,4 +18,6 @@
     <string name="set_rating">당신의 점수는?</string>
     <string name="add_ingredient">재료를 추가하세요</string>
     <string name="ingredient">재료</string>
+    <string name="recipe_exist">지금 당장 만들 수 있는 레시피</string>
+    <string name="recipe_recommend">추천 레시피</string>
 </resources>

@@ -19,12 +19,12 @@ public class FoodAdapter extends ListAdapter<Food, FoodItemViewHolder> {
     private ItemClickListener<Food> itemClickListener;
     private RatingClickListener<Food> ratingClickListener;
 
-    public FoodAdapter(@Nullable ItemClickListener<Food> itemClickListener, RatingClickListener<Food> ratingClickListener) {
+    FoodAdapter(@Nullable ItemClickListener<Food> itemClickListener, RatingClickListener<Food> ratingClickListener) {
         super(DIFF_CALLBACK);
         this.itemClickListener = itemClickListener;
         this.ratingClickListener = ratingClickListener;
     }
-
+    
     @NonNull
     @Override
     public FoodItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,7 +40,6 @@ public class FoodAdapter extends ListAdapter<Food, FoodItemViewHolder> {
         holder.itemView.setOnClickListener(__ -> {
             if (itemClickListener != null) {
                 itemClickListener.onItemClick(item);
-                
             }
         });
         

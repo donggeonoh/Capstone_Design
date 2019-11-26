@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName;
 public class FoodRating {
     
     @SerializedName("uid")
-    String uid;
+    private String uid;
     
     @SerializedName("food")
-    String food;
+    private String food;
     
     @SerializedName("ratio")
-    float rating;
+    private float rating;
     
     public FoodRating(String uid, String food, float rating) {
         this.uid = uid;

@@ -21,10 +21,10 @@
             android:layout_height="match_parent">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:text="지금 당장 만들어보세요!"
+                android:text="@string/recipe_exist"
                 android:gravity="center"
                 android:textSize="26dp"
-                android:textColor="@color/black"
+                android:textColor="@android:color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -38,9 +38,9 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:gravity="center"
-                android:text="부족한 재료를 사서 만들어보세요"
+                android:text="@string/recipe_recommend"
                 android:textColor="@color/black"
-                android:textSize="24dp"
+                android:textSize="26dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

@@ -16,7 +16,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.data.AddIngredient;
-import com.donggeon.honmaker.data.User;
 import com.donggeon.honmaker.databinding.ActivityMainBinding;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
@@ -55,15 +54,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 
-                Log.d("Login", "Sign in anonymously : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
+                Log.d("Login111", "Sign in anonymously : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                 
                 RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-                Call<String> call = api.login(new User(FirebaseAuth.getInstance().getCurrentUser().getUid()));
+                Call<String> call = api.login(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
+                        
                         String result = response.body();
+                        if(result == null) {
+                            return;
+                        }
+                        
                         Log.d("Retrofit", result);
                         Log.d("Login", "Sign in anonymously : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                     }

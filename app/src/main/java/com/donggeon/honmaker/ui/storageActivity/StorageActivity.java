@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.donggeon.honmaker.R;
-import com.donggeon.honmaker.data.DeleteIngredient;
 import com.donggeon.honmaker.data.Ingredient;
 import com.donggeon.honmaker.databinding.ActivityStorageBinding;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
@@ -76,26 +75,26 @@ public class StorageActivity extends BaseActivity<ActivityStorageBinding> {
                 .setPositiveButton("확인", (dialog, which) -> {
                     
                     RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-                    Call<DeleteIngredient> call = api.deleteIngredient(FirebaseAuth.getInstance().getUid(), ingredient.getName());
-    
-                    call.enqueue(new Callback<DeleteIngredient>() {
+                    Call<String> call = api.deleteIngredient(FirebaseAuth.getInstance().getUid(), ingredient.getName());
+                    
+                    call.enqueue(new Callback<String>() {
                         @Override
-                        public void onResponse(Call<DeleteIngredient> call, Response<DeleteIngredient> response) {
-                            DeleteIngredient item = response.body();
-    
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            String item = response.body();
+                            Log.d("Storagddddd", item);
                             if(item == null) {
                                 Log.d("delete ingredient","값이 비어있습니다.");
                                 return;
                             }
                             
-                            Toast.makeText(getApplicationContext(), "값이 삭제되었습니다", Toast.LENGTH_SHORT).show();
-                            Log.d("delete ingredient", item.getIngredient().getName() + "이 삭제되었습니다.");
+                            Toast.makeText(getApplicationContext(), "재료가 삭제되었습니다", Toast.LENGTH_SHORT).show();
+                            Log.d("delete ingredient", "재료가 삭제되었습니다.");
                             
                             binding.getVm().loadIngredientList();
                         }
     
                         @Override
-                        public void onFailure(Call<DeleteIngredient> call, Throwable t) {
+                        public void onFailure(Call<String> call, Throwable t) {
                             t.printStackTrace();
                         }
                     });

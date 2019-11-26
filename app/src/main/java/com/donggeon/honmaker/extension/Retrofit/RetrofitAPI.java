@@ -1,12 +1,11 @@
 package com.donggeon.honmaker.extension.Retrofit;
 
 import com.donggeon.honmaker.data.AddIngredient;
-import com.donggeon.honmaker.data.DeleteIngredient;
 import com.donggeon.honmaker.data.FoodList;
 import com.donggeon.honmaker.data.FoodRating;
 import com.donggeon.honmaker.data.Ingredient;
+import com.donggeon.honmaker.data.Status;
 import com.donggeon.honmaker.data.Text;
-import com.donggeon.honmaker.data.User;
 
 import java.util.List;
 
@@ -20,14 +19,15 @@ import retrofit2.http.Query;
 
 public interface RetrofitAPI {
     
+    @FormUrlEncoded
     @POST("/")
-    Call<String> login(@Body User user);
+    Call<String> login(@Field("UID") String UID);
     
     @POST("/ingredients/put")
     Call<List<Ingredient>> ingredient(@Body Text text);
     
     @POST("/rating/put")
-    Call<String> rating(@Body FoodRating data);
+    Call<Status> rating(@Body FoodRating data);
     
     @GET("/recommend")
     Call<FoodList> recommend(@Query("UID") String uid);
@@ -41,5 +41,5 @@ public interface RetrofitAPI {
     
     @FormUrlEncoded
     @POST("user/ingredients/delete")
-    Call<DeleteIngredient> deleteIngredient(@Field("UID") String UID, @Field("ing_Name") String ing_Name);
+    Call<String> deleteIngredient(@Field("UID") String UID, @Field("ing_Name") String ing_Name);
 }

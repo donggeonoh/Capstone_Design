@@ -37,18 +37,22 @@ public class FoodViewModel extends BaseViewModel {
         call.enqueue(new Callback<FoodList>() {
             @Override
             public void onResponse(Call<FoodList> call, Response<FoodList> response) {
-            
+                
+                if(response.body() == null) {
+                    return;
+                }
+                
                 for (Food data : response.body().getContained()) {
                     Log.d("FoodActivity", "name : " + data.getFoodName() + " uri : " + data.getImageUrl() + ", " + data.getRecipeUrl());
                 }
-            
+                
                 foodList.setValue(response.body().getContained());
                 nonFoodList.setValue(response.body().getUncontained());
             }
         
             @Override
             public void onFailure(Call<FoodList> call, Throwable t) {
-            
+                t.printStackTrace();
             }
         });
     }

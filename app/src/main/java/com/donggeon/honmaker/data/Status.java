@@ -2,20 +2,20 @@ package com.donggeon.honmaker.data;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DeleteIngredient {
+public class Status {
     
     @SerializedName("code")
-    private String code;
+    private int code;
     
-    public DeleteIngredient(String code) {
+    public Status(int code) {
         this.code = code;
     }
     
-    public String getCode() {
+    public int getCode() {
         return code;
     }
     
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 }

@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 public class AddIngredient {
     
     @SerializedName("code")
-    int code;
+    private int code;
     
-    Ingredient ingredient;
+    private Ingredient ingredient;
     
     public AddIngredient(int code, Ingredient ingredient) {
         this.code = code;

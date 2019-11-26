@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import com.donggeon.honmaker.R;
 import com.donggeon.honmaker.data.Food;
 import com.donggeon.honmaker.data.FoodRating;
+import com.donggeon.honmaker.data.Status;
 import com.donggeon.honmaker.databinding.ActivityFoodBinding;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitAPI;
 import com.donggeon.honmaker.extension.Retrofit.RetrofitClient;
@@ -28,9 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * TODO : @
- */
 public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
 
     @Override
@@ -75,20 +73,37 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
             Log.d("dialog message", "uid : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
     
             RetrofitAPI api = RetrofitClient.retrofit.create(RetrofitAPI.class);
-            Call<String> call = api.rating(new FoodRating(FirebaseAuth.getInstance().getCurrentUser().getUid(), item.getFoodName(), rating));
-    
-            call.enqueue(new Callback<String>() {
+            Call<Status> call = api.rating(new FoodRating(FirebaseAuth.getInstance().getCurrentUser().getUid(), item.getFoodName(), rating));
+            
+            call.enqueue(new Callback<Status>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    String result = response.body();
-                    Log.d("dialog message", result);
+                public void onResponse(Call<Status> call, Response<Status> response) {
                     
-                    Toast.makeText(FoodActivity.this, rating + "점을 주었습니다.", Toast.LENGTH_SHORT).show();
+                    if(response.body() == null) {
+                        Log.d("dialog message", "response is null");
+                        return;
+                    }
+                    Status result = response.body();
+                    
+                    // 200 : 새로운 레시피에 대한 평점을 매겼을 때, 300 : 평점을 매긴 레시피에 대한 평점을 매겼을 때
+                    switch (result.getCode()) {
+                        case 200:
+                            Toast.makeText(FoodActivity.this, rating + "점을 주었습니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                            
+                        case 300:
+                            Toast.makeText(FoodActivity.this, rating + "점으로 갱신하였습니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                            
+                            default:
+                                Toast.makeText(FoodActivity.this, "알 수 없는 오류입니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    
                     ad.dismiss();
                 }
         
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<Status> call, Throwable t) {
                     ad.dismiss();
                 }
             });
@@ -101,7 +116,7 @@ public class FoodActivity extends BaseActivity<ActivityFoodBinding> {
                 .setToolbarColor(getResources().getColor(R.color.colorPrimary))
                 .setShowTitle(true)
                 .build();
-
+        
         customTabsIntent.launchUrl(this, Uri.parse(item.getRecipeUrl()));
     }
 }
