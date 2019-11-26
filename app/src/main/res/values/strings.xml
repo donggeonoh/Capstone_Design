@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HonMaker</string>
+    <string name="application_name">혼주부</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -13,4 +13,11 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="rating">평가하기</string>
+    <string name="submit">확인</string>
+    <string name="set_rating">당신의 점수는?</string>
+    <string name="add_ingredient">재료를 추가하세요</string>
+    <string name="ingredient">재료</string>
+    <string name="recipe_exist">지금 당장 만들 수 있는 레시피</string>
+    <string name="recipe_recommend">추천 레시피</string>
 </resources>
